@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -45,13 +46,13 @@ public class Busqueda extends javax.swing.JFrame {
 
         jButton1 = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jList2 = new javax.swing.JList();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jComboBox1 = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -61,8 +62,6 @@ public class Busqueda extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-
-        jLabel1.setText("Ingrese una pelicula");
 
         jLabel2.setText("Bienvenido!");
 
@@ -88,6 +87,13 @@ public class Busqueda extends javax.swing.JFrame {
         ));
         jScrollPane3.setViewportView(jTable1);
 
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Titulo", "Director" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -104,7 +110,7 @@ public class Busqueda extends javax.swing.JFrame {
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 612, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1049, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
@@ -120,7 +126,7 @@ public class Busqueda extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(97, 97, 97)
@@ -146,7 +152,6 @@ public class Busqueda extends javax.swing.JFrame {
                 }
             }
             
-            
             File f = new File(archivoCSV);
             String linea = "";
             FileReader frp = new FileReader(f);
@@ -154,13 +159,12 @@ public class Busqueda extends javax.swing.JFrame {
             while((linea=brp.readLine())!= null){
                 String aux = linea;
                 String[] dato = new String[8];
-                int e = 0;
                 for (int i = 0; i < 8; i++) {
                     dato[i] = aux.substring(0, aux.indexOf(";"));
                     aux = aux.substring(aux.indexOf(";")+1);
                 }
                 
-                if (dato[0].contains(jTextField1.getText())) {
+                if (dato[0].toLowerCase().contains(jTextField1.getText().toLowerCase())) {
                     model.addRow(dato);
                 }
             }
@@ -170,6 +174,10 @@ public class Busqueda extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e.toString());
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -212,7 +220,7 @@ public class Busqueda extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JList jList2;
