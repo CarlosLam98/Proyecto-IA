@@ -303,10 +303,48 @@ public class Busqueda extends javax.swing.JFrame {
         
         Collections.sort(SP);
         SimilitudPeliculas a = SP.get(SP.size()-1);
-        if (a.getPeliculas() >= 9) {
+        
+        int z = modelReco.getRowCount() - 1;
+            if (z > 0) {
+                for (int i = z; i >= 0; i--) {
+                modelReco.removeRow(i);
+                }
+        }
             
+        if (a.getPeliculas() > 9) {
+            ArrayList<Movie> pelisvarias = a.devolverArraylist();
+            for (int i = 0; i < 10; i++) {
+                Movie aux = pelisvarias.get(i);
+                modelReco.addRow(aux.getMovie());
+            }
         }else{
+            ArrayList<Movie> pelisvarias = a.devolverArraylist();
+            for (int i = 0; i < pelisvarias.size(); i++) {
+                Movie aux = pelisvarias.get(i);
+                modelReco.addRow(aux.getMovie());
+            }
+            int total = pelisvarias.size();
+            int sizedob = SP.size()-1;
             
+            while(total < 10){
+                sizedob--;
+                a = SP.get(sizedob);
+                pelisvarias = a.devolverArraylist();
+                
+                if (pelisvarias.size() >= 10 - total) {
+                    for (int i = 0; i < 10 - total; i++) {
+                        Movie aux = pelisvarias.get(i);
+                        modelReco.addRow(aux.getMovie());
+                    }
+                    total = 10;
+                }else{
+                    for (int i = 0; i < pelisvarias.size(); i++) {
+                        Movie aux = pelisvarias.get(i);
+                        modelReco.addRow(aux.getMovie());
+                    }
+                    total = total + pelisvarias.size();
+                }
+            }
         }
     }
     

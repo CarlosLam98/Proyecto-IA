@@ -37,7 +37,7 @@ public class SimilitudPeliculas implements Comparable<SimilitudPeliculas>{
         }
     }
     
-    public ArrayList<Movie> devolver(){
+    public ArrayList<Movie> devolverArraylist(){
         return peliculas;
     }
     
