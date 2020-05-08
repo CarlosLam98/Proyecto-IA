@@ -5,10 +5,13 @@
  */
 package Interfaz;
 
+import Clases.Movie;
+import java.awt.List;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComboBox;
@@ -26,15 +29,44 @@ public class Busqueda extends javax.swing.JFrame {
      */
     
     DefaultTableModel model;
-
+    public ArrayList<Movie> listadoDePeliculas;
     public Busqueda() throws FileNotFoundException {
+        this.listadoDePeliculas = new ArrayList<Movie>();
         initComponents();
         String [] columnas = {"Title","IMDB Score","Duration","Genres","Director","Actor 1","Actor 2","Actor 3"};
         model = new DefaultTableModel(null,columnas);
         jTable1.setModel(model);
-        
+        LeturaArchivo();
     }
 
+    private void LeturaArchivo(){
+        try{
+            String rutaArchivo = "src/movie_metadata 1.csv";
+            String linea = "";
+            File f = new File(rutaArchivo);
+            FileReader frp = new FileReader(f);
+            BufferedReader brp = new BufferedReader(frp);
+            while((linea=brp.readLine())!= null){
+                String aux = linea;
+                String[] dato = new String[9];
+                for (int i = 0; i < 9; i++) {
+                    if (i<=7) {
+                        dato[i] = aux.substring(0, aux.indexOf(";"));
+                        aux = aux.substring(aux.indexOf(";")+1);
+                    }else{
+                        dato[i] = aux;
+                    }
+                }
+                Movie nuevaPelicula = new Movie();
+                nuevaPelicula.createMovie(dato);
+                listadoDePeliculas.add(nuevaPelicula);
+            }
+            brp.close();
+            frp.close();
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, e.toString());
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -93,7 +125,7 @@ public class Busqueda extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(jTable1);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Titulo", "Genero", "Director" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -145,34 +177,35 @@ public class Busqueda extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String archivoCSV = "C:\\Users\\Carlos\\OneDrive\\URL\\1C2020\\Inteligencia artificial\\Final\\movie_metadata 1.csv";
+        
         try
         {
             int a = model.getRowCount() - 1;
-            
             if (a > 0) {
                     for (int i = a; i >= 0; i--) {
                     model.removeRow(i);
                 }
             }
             
-            File f = new File(archivoCSV);
-            String linea = "";
-            FileReader frp = new FileReader(f);
-            BufferedReader brp = new BufferedReader(frp);
-            while((linea=brp.readLine())!= null){
-                String aux = linea;
-                String[] dato = new String[8];
-                for (int i = 0; i < 8; i++) {
-                    dato[i] = aux.substring(0, aux.indexOf(";"));
-                    aux = aux.substring(aux.indexOf(";")+1);
-                }
-                if (dato[0].toLowerCase().contains(jTextField1.getText().toLowerCase().trim())) {
-                    model.addRow(dato);
-                }
+            switch(jComboBox1.getSelectedIndex()){
+                case 0: //Titulo
+                    for (Movie pelicula : listadoDePeliculas) {
+                        if (pelicula.getTitle().toLowerCase().contains(jTextField1.getText().toLowerCase())) {
+                            model.addRow(pelicula.getMovie());
+                        }
+                    }
+                    break;
+                case 1: //Genero
+                    
+                    break;
+                case 2: //Director
+                    
+                    break;
             }
+            
             jTextField1.setText(null);
         }catch(Exception e)
         {
