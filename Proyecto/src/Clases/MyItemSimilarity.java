@@ -19,7 +19,7 @@ public class MyItemSimilarity implements ItemSimilarity{
         
         double score = 0;
         if (movie1.getGenre().contains("|")) { //En caso de que genero 1 tenga varios generos
-            String [] generos1 = movie1.getGenre().split("|");
+            String [] generos1 = movie1.getGenre().split("\\|");
             if (movie2.getGenre().contains("|")) { //En caso de que genero 2 tenga varios generos
                 for (String generos11 : generos1) {
                     if (movie2.getGenre().toLowerCase().contains(generos11.toLowerCase())) {
@@ -46,6 +46,20 @@ public class MyItemSimilarity implements ItemSimilarity{
             score =+ 0.25;
         }
         
+        if (movie1.getPlotwords().contains("|")) { //Significa que tiene más de una
+            String[] pelis = movie1.getPlotwords().split("\\|");
+            if (movie2.getPlotwords().contains("|")) { //La segunda pelicula tambien tiene más de una
+                for (int i = 0; i < pelis.length; i++) {
+                    if (movie2.getPlotwords().toLowerCase().contains(pelis[i].toLowerCase())) {
+                        score =+ 0.20;
+                    }
+                }
+            }else{
+                if (movie1.getPlotwords().toLowerCase().contains(movie2.getPlotwords().toLowerCase())) {
+                     score =+ 0.20;
+                }
+            }
+        }
         return score;
     }
     

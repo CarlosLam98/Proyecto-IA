@@ -6,15 +6,18 @@
 package Interfaz;
 
 import Clases.Movie;
-import java.awt.List;
+import Clases.MyItemSimilarity;
+import Clases.SimilitudPeliculas;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -27,18 +30,35 @@ public class Busqueda extends javax.swing.JFrame {
     /**
      * Creates new form Busqueda
      */
-    
+    ArrayList<String> peliculasSeleccionadas;
     DefaultTableModel model;
+    DefaultTableModel modelReco;
     public ArrayList<Movie> listadoDePeliculas;
+    
     public Busqueda() throws FileNotFoundException {
-        this.listadoDePeliculas = new ArrayList<Movie>();
         initComponents();
+        this.peliculasSeleccionadas = new ArrayList<>();
+        this.listadoDePeliculas = new ArrayList<>();
         String [] columnas = {"Title","IMDB Score","Duration","Genres","Director","Actor 1","Actor 2","Actor 3"};
         model = new DefaultTableModel(null,columnas);
+        modelReco = new DefaultTableModel(null,columnas);
         jTable1.setModel(model);
+        jTable2.setModel(modelReco);
         LeturaArchivo();
+        CrerUsuarios();
     }
 
+    private void CrerUsuarios(){
+        try{
+            File usuarios = new File("src/usuariosvarios.txt");
+            if (!usuarios.exists()) {
+                BufferedWriter bw = new BufferedWriter(new FileWriter(usuarios));
+                bw.close();
+            }
+        }catch(Exception e){
+        }
+    }
+    
     private void LeturaArchivo(){
         try{
             String rutaArchivo = "src/movie_metadata 1.csv";
@@ -46,6 +66,7 @@ public class Busqueda extends javax.swing.JFrame {
             File f = new File(rutaArchivo);
             FileReader frp = new FileReader(f);
             BufferedReader brp = new BufferedReader(frp);
+            int cod = 1;
             while((linea=brp.readLine())!= null){
                 String aux = linea;
                 String[] dato = new String[9];
@@ -58,7 +79,8 @@ public class Busqueda extends javax.swing.JFrame {
                     }
                 }
                 Movie nuevaPelicula = new Movie();
-                nuevaPelicula.createMovie(dato);
+                nuevaPelicula.createMovie(dato,cod);
+                cod++;
                 listadoDePeliculas.add(nuevaPelicula);
             }
             brp.close();
@@ -79,12 +101,12 @@ public class Busqueda extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jComboBox1 = new javax.swing.JComboBox();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -96,15 +118,6 @@ public class Busqueda extends javax.swing.JFrame {
         });
 
         jLabel2.setText("Bienvenido!");
-
-        jLabel3.setText("Sugerencias:");
-
-        jList2.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane2.setViewportView(jList2);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -132,6 +145,21 @@ public class Busqueda extends javax.swing.JFrame {
             }
         });
 
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable2);
+
+        jLabel3.setText("Recomendaciones:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -140,38 +168,40 @@ public class Busqueda extends javax.swing.JFrame {
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1)
+                        .addContainerGap())
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 612, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1049, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton1)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel2)
+                                    .addGap(968, 968, 968))
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1049, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 48, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(9, 9, 9)
+                .addGap(22, 22, 22)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
+                .addGap(31, 31, 31)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(188, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
         pack();
@@ -199,14 +229,22 @@ public class Busqueda extends javax.swing.JFrame {
                     }
                     break;
                 case 1: //Genero
-                    
+                    for (Movie pelicula : listadoDePeliculas) {
+                        if (pelicula.getGenre().toLowerCase().contains(jTextField1.getText().toLowerCase())) {
+                            model.addRow(pelicula.getMovie());
+                        }
+                    }
                     break;
                 case 2: //Director
-                    
+                    for (Movie pelicula : listadoDePeliculas) {
+                        if (pelicula.getDirector().toLowerCase().contains(jTextField1.getText().toLowerCase())) {
+                            model.addRow(pelicula.getMovie());
+                        }
+                    }
                     break;
             }
-            
             jTextField1.setText(null);
+            
         }catch(Exception e)
         {
             JOptionPane.showMessageDialog(null, e.toString());
@@ -218,11 +256,110 @@ public class Busqueda extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        // TODO add your handling code here:
+        //CUANDO EL USUARIO SELECCIONA UNA PELICULA.
         int opcion = jTable1.rowAtPoint(evt.getPoint());
-        JOptionPane.showMessageDialog(null, jTable1.getValueAt(opcion, 0));
+        peliculasSeleccionadas.add(jTable1.getValueAt(opcion, 0).toString());
+        JOptionPane.showMessageDialog(null, "Se ha añadido:"+jTable1.getValueAt(opcion, 0));
+        EscribirEnUsuarios();
+        CargarRecomendaciones();
     }//GEN-LAST:event_jTable1MouseClicked
 
+    private void CargarRecomendaciones(){
+        MyItemSimilarity mis = new MyItemSimilarity();
+            
+        ArrayList<Movie> Auxiliar = new ArrayList<>();
+        ArrayList<SimilitudPeliculas> SP = new ArrayList<>();
+
+        for (String peliculasSeleccionada : peliculasSeleccionadas) {
+            Boolean existe = false;
+            for (Movie listadoDePelicula : listadoDePeliculas) {
+                if (listadoDePelicula.getTitle().equals(peliculasSeleccionada) && existe == false) {
+                    existe = true;
+                    Auxiliar.add(listadoDePelicula);
+                }
+            }
+        }
+        for (Movie pelis : Auxiliar) {
+                for (Movie listadoDePelicula : listadoDePeliculas) {
+                    double similitud = mis.itemSimilarity(pelis, listadoDePelicula);
+                    if (SP.isEmpty()) {
+                        SP.add(new SimilitudPeliculas(similitud, listadoDePelicula));
+                    }
+                    else{
+                    Boolean agregar = true;
+                    for (SimilitudPeliculas SP1 : SP) {
+                        if (SP1.getSimilitud() == similitud) {
+                            SP1.agregarPeli(listadoDePelicula);
+                            agregar = false;
+                            break;
+                        }
+                    }
+                    if (agregar) {
+                        SP.add(new SimilitudPeliculas(similitud, listadoDePelicula));
+                    }
+                }
+            }
+        }
+        
+        Collections.sort(SP);
+        SimilitudPeliculas a = SP.get(SP.size()-1);
+        if (a.getPeliculas() >= 9) {
+            
+        }else{
+            
+        }
+    }
+    
+    private void EscribirEnUsuarios(){
+        try{
+            File f = new File("src/usuariosvarios.txt");
+            String linea = "";
+            FileReader frp = new FileReader(f);
+            BufferedReader brp = new BufferedReader(frp);
+            ArrayList<String> usuarios = new ArrayList<>();
+            int lineas = 0;
+            while((linea=brp.readLine())!= null){
+                usuarios.add(linea);
+                lineas++;
+            }
+            if (lineas == 0) {
+                //Primer usuario
+                FileWriter TextOut = new FileWriter(f, false);
+                TextOut.write("1:" + peliculasSeleccionadas.toString()+ "\r\n");
+                TextOut.close();
+            }else{
+                if (peliculasSeleccionadas.size() > 1) {
+                    String numUsuario = usuarios.get(lineas-1).substring(0,usuarios.get(lineas-1).indexOf(":"));
+                    String nuevaLinea = numUsuario + ":" + peliculasSeleccionadas.toString();
+                    usuarios.set(lineas-1, nuevaLinea);
+                    FileWriter TextOut = new FileWriter(f, false);
+                    for (int i = 0; i < usuarios.size(); i++) {
+                        TextOut.write(usuarios.get(i)+ "\r\n");
+                    }
+                    TextOut.close();
+                }else{
+                    String numUsuario = usuarios.get(lineas-1).substring(0,usuarios.get(lineas-1).indexOf(":"));
+                    int numUSU = Integer.valueOf(numUsuario);
+                    numUSU++ ;
+                    numUsuario = String.valueOf(numUSU);
+                    String nueba = numUsuario + ":" + peliculasSeleccionadas.toString();
+                    usuarios.add(nueba);
+                    FileWriter TextOut = new FileWriter(f, false);
+                    for (int i = 0; i < usuarios.size(); i++) {
+                        TextOut.write(usuarios.get(i)+ "\r\n");
+                    }
+                    TextOut.close();
+                }
+            }
+            
+            
+            
+            
+        }catch(Exception e){JOptionPane.showMessageDialog(null, e.toString());}
+    }
+    
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -267,10 +404,10 @@ public class Busqueda extends javax.swing.JFrame {
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JList jList2;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

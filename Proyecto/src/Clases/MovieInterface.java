@@ -10,7 +10,7 @@ package Clases;
  * @author Carlos
  */
 public interface MovieInterface {
-    public void createMovie(String[] movie);
+    public void createMovie(String[] movie, int codigo);
     public String getTitle();
     public double getIMDBScore();
     public double getDuration();

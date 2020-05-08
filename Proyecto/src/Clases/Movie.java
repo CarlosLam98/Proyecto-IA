@@ -21,10 +21,11 @@ public class Movie implements MovieInterface{
     private double IMDBscore;
     private double Duration;
     private String PlotKeyword;
+    private int codigo;
     
     
     @Override
-    public void createMovie(String[] movie) {
+    public void createMovie(String[] movie, int codigo) {
         this.Title = movie[0];
         if (!movie[1].isEmpty()) {
             this.IMDBscore = Double.parseDouble(movie[1]);
@@ -43,6 +44,7 @@ public class Movie implements MovieInterface{
         this.Actor2 = movie[6];
         this.Actor3 = movie[7];
         this.PlotKeyword = movie[8];
+        this.codigo = codigo;
     }
     
     @Override
@@ -103,8 +105,4 @@ public class Movie implements MovieInterface{
         datos[7] = this.Actor3;
         return datos;
     }
-
-    
-    
-    
 }
