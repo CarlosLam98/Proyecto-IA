@@ -11,11 +11,12 @@ import java.util.ArrayList;
  *
  * @author Carlos
  */
-public class SimilitudPeliculas implements Comparable<SimilitudPeliculas>{
+public class ScoreMovie implements Comparable<ScoreMovie>{
+    
     double score = 0;
     ArrayList<Movie> peliculas = new ArrayList<>();
     
-    public SimilitudPeliculas(double score, Movie peli1){
+    public ScoreMovie(double score, Movie peli1){
         this.score = score;
         peliculas.add(peli1);
     }
@@ -42,7 +43,7 @@ public class SimilitudPeliculas implements Comparable<SimilitudPeliculas>{
     }
     
     @Override
-    public int compareTo(SimilitudPeliculas sp2){
+    public int compareTo(ScoreMovie sp2){
         int estado = -1;
         if (this.score == sp2.getSimilitud()) {
             estado = 0;
@@ -57,5 +58,4 @@ public class SimilitudPeliculas implements Comparable<SimilitudPeliculas>{
     public int getPeliculas(){
         return peliculas.size();
     }
-    
 }

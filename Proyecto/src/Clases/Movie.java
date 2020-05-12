@@ -9,7 +9,7 @@ package Clases;
  *
  * @author Carlos
  */
-public class Movie implements MovieInterface{
+public class Movie implements MovieInterface, Comparable<Movie>{
 
     
     private String Title;
@@ -104,5 +104,16 @@ public class Movie implements MovieInterface{
         datos[6] = this.Actor2;
         datos[7] = this.Actor3;
         return datos;
+    }
+
+    public int compareTo(Movie o) {
+        int estado = -1;
+        if (this.IMDBscore == o.getIMDBScore()) {
+            estado = 0;
+        }
+        else if (this.IMDBscore > o.getIMDBScore()) {
+            estado = 1;
+        }
+        return estado;
     }
 }
